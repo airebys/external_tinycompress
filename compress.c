@@ -572,7 +572,7 @@ int compress_set_gapless_metadata(struct compress *compress,
 	return 0;
 }
 
-#ifdef ENABLE_EXTENDED_COMPRESS_FORMAT
+#if defined(SNDRV_COMPRESS_SET_NEXT_TRACK_PARAM)
 int compress_set_next_track_param(struct compress *compress,
 	union snd_codec_options *codec_options)
 {
@@ -581,6 +581,12 @@ int compress_set_next_track_param(struct compress *compress,
 
 	if (ioctl(compress->fd, SNDRV_COMPRESS_SET_NEXT_TRACK_PARAM, codec_options))
 		return oops(compress, errno, "cannot set next track params\n");
+	return 0;
+}
+#else
+int compress_set_next_track_param(struct compress *compress __unused,
+	union snd_codec_options *codec_options __unused)
+{
 	return 0;
 }
 #endif
